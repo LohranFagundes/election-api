@@ -1,5 +1,5 @@
 <?php
-// test-login.php (criar na raiz do projeto)
+
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -7,7 +7,7 @@ ini_set('display_errors', 1);
 echo "Testing Login Credentials...\n";
 echo "============================\n\n";
 
-// Load environment variables
+
 if (file_exists(__DIR__ . '/.env')) {
     $lines = file(__DIR__ . '/.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
@@ -36,7 +36,7 @@ try {
 
     echo "✓ Connected to database\n\n";
 
-    // Test admin table
+    
     echo "ADMIN ACCOUNTS:\n";
     echo "---------------\n";
     
