@@ -1,5 +1,5 @@
 <?php
-// test-fixed-database.php
+
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -7,7 +7,7 @@ ini_set('display_errors', 1);
 echo "=== TESTING FIXED DATABASE CLASS ===\n";
 echo "=====================================\n\n";
 
-// Load environment variables
+
 if (file_exists(__DIR__ . '/.env')) {
     $lines = file(__DIR__ . '/.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
@@ -60,7 +60,7 @@ try {
     if ($db->tableExists('admins')) {
         echo "✓ Admins table found!\n";
         
-        // Test fetch method
+        
         $admin = $db->fetch("SELECT * FROM admins WHERE email = ? LIMIT 1", ['admin@election.com']);
         
         if ($admin) {
@@ -71,7 +71,7 @@ try {
         } else {
             echo "✗ Admin 'admin@election.com' not found\n";
             
-            // Show all admins
+            
             $allAdmins = $db->fetchAll("SELECT id, name, email, role FROM admins");
             echo "\nAll admins:\n";
             foreach ($allAdmins as $adminRecord) {
