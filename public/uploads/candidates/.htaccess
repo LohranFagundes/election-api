@@ -1,0 +1,41 @@
+<?php
+// public/uploads/candidates/.htaccess
+
+<FilesMatch "\.(jpg|jpeg|png|gif)$">
+    Header set Content-Type image/auto
+    Header set Cache-Control "public, max-age=3600"
+    Header set Access-Control-Allow-Origin "*"
+</FilesMatch>
+
+<Files "*.php">
+    Require all denied
+</Files>
+
+<Files "*.txt">
+    Require all denied
+</Files>
+
+<Files "*.log">
+    Require all denied
+</Files>
+
+Options -Indexes
+Options -ExecCGI
+
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ /api/v1/candidates/photo/$1 [R=301,L]
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+</IfModule>
+
+<Limit GET>
+    Require all granted
+</Limit>
+
+<LimitExcept GET>
+    Require all denied
+</LimitExcept>

@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS `candidates` (
+    `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `position_id` bigint(20) UNSIGNED NOT NULL,
+    `name` varchar(255) NOT NULL,
+    `nickname` varchar(100) DEFAULT NULL,
+    `description` text DEFAULT NULL,
+    `photo` longblob DEFAULT NULL,
+    `photo_filename` varchar(255) DEFAULT NULL,
+    `photo_mime_type` varchar(100) DEFAULT NULL,
+    `number` varchar(10) DEFAULT NULL,
+    `party` varchar(100) DEFAULT NULL,
+    `coalition` varchar(255) DEFAULT NULL,
+    `is_active` tinyint(1) NOT NULL DEFAULT 1,
+    `order_position` int(11) NOT NULL DEFAULT 0,
+    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `idx_candidates_position` (`position_id`),
+    KEY `idx_candidates_active` (`is_active`),
+    KEY `idx_candidates_number` (`number`),
+    KEY `idx_candidates_order` (`order_position`),
+    CONSTRAINT `fk_candidates_position` FOREIGN KEY (`position_id`) REFERENCES `positions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

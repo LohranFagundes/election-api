@@ -1,0 +1,551 @@
+# Election API Documentation
+
+**Base URL:** `http://localhost:8000`
+
+---
+
+## Authentication
+
+### Admin Login
+**POST** `/api/v1/auth/admin/login`
+```json
+{
+  "email": "admin@election.com",
+  "password": "password"
+}
+```
+
+### Voter Login
+**POST** `/api/v1/auth/voter/login`
+```json
+{
+  "email": "joao.silva@email.com",
+  "password": "password"
+}
+```
+
+### Token Validation
+**GET** `/api/v1/auth/validate`
+```
+Headers: Authorization: Bearer <token>
+```
+
+### Logout
+**POST** `/api/v1/auth/logout`
+```
+Headers: Authorization: Bearer <token>
+```
+
+### Refresh Token
+**POST** `/api/v1/auth/refresh`
+```
+Headers: Authorization: Bearer <token>
+```
+
+---
+
+## Admin Management
+
+### List Admins
+**GET** `/api/v1/admin/admins?page=1&limit=10&search=john`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Get Admin
+**GET** `/api/v1/admin/admins/{id}`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Create Admin
+**POST** `/api/v1/admin/admins`
+```json
+{
+  "name": "New Admin",
+  "email": "newadmin@election.com",
+  "password": "securepassword123",
+  "role": "admin",
+  "permissions": ["elections.*", "voters.read", "reports.read"]
+}
+```
+
+### Update Admin
+**PUT** `/api/v1/admin/admins/{id}`
+```json
+{
+  "name": "Updated Admin Name",
+  "email": "updated@election.com",
+  "role": "moderator",
+  "permissions": ["elections.read", "voters.read"]
+}
+```
+
+### Delete Admin
+**DELETE** `/api/v1/admin/admins/{id}`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Toggle Admin Status
+**POST** `/api/v1/admin/admins/{id}/toggle-status`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+---
+
+## Voter Management
+
+### List Voters
+**GET** `/api/v1/admin/voters?page=1&limit=10&search=maria`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Get Voter
+**GET** `/api/v1/admin/voters/{id}`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Create Voter
+**POST** `/api/v1/admin/voters`
+```json
+{
+  "name": "Maria Silva",
+  "email": "maria@email.com",
+  "password": "password123",
+  "cpf": "12345678901",
+  "birth_date": "1990-05-15",
+  "phone": "(11) 99999-1234",
+  "vote_weight": 1.0
+}
+```
+
+### Update Voter
+**PUT** `/api/v1/admin/voters/{id}`
+```json
+{
+  "name": "Updated Name",
+  "email": "updated@email.com",
+  "phone": "(11) 88888-8888",
+  "vote_weight": 1.5
+}
+```
+
+### Delete Voter
+**DELETE** `/api/v1/admin/voters/{id}`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Toggle Voter Status
+**POST** `/api/v1/admin/voters/{id}/toggle-status`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Verify Voter
+**POST** `/api/v1/admin/voters/{id}/verify`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Bulk Import Voters
+**POST** `/api/v1/admin/voters/bulk-import`
+```json
+{
+  "voters": [
+    {
+      "name": "Voter 1",
+      "email": "voter1@email.com",
+      "password": "password123",
+      "cpf": "11111111111",
+      "birth_date": "1985-01-01",
+      "phone": "(11) 11111-1111",
+      "vote_weight": 1.0
+    },
+    {
+      "name": "Voter 2",
+      "email": "voter2@email.com",
+      "password": "password123",
+      "cpf": "22222222222",
+      "birth_date": "1990-01-01",
+      "phone": "(11) 22222-2222",
+      "vote_weight": 1.5
+    }
+  ]
+}
+```
+
+---
+
+## Election Management
+
+### List Elections
+**GET** `/api/v1/admin/elections?page=1&status=active&type=internal`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Get Election
+**GET** `/api/v1/admin/elections/{id}`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Create Election
+**POST** `/api/v1/admin/elections`
+```json
+{
+  "title": "Presidential Election 2024",
+  "description": "National presidential election",
+  "election_type": "federal",
+  "start_date": "2024-10-01 08:00:00",
+  "end_date": "2024-10-01 17:00:00",
+  "timezone": "America/Sao_Paulo",
+  "allow_blank_votes": true,
+  "allow_null_votes": true,
+  "require_justification": false,
+  "max_votes_per_voter": 1,
+  "voting_method": "single",
+  "results_visibility": "after_end"
+}
+```
+
+### Update Election
+**PUT** `/api/v1/admin/elections/{id}`
+```json
+{
+  "title": "Updated Election Title",
+  "description": "Updated description",
+  "start_date": "2024-11-01 08:00:00",
+  "end_date": "2024-11-01 18:00:00"
+}
+```
+
+### Delete Election
+**DELETE** `/api/v1/admin/elections/{id}`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Update Election Status
+**POST** `/api/v1/admin/elections/{id}/status`
+```json
+{
+  "status": "active"
+}
+```
+
+---
+
+## Position Management
+
+### List Positions
+**GET** `/api/v1/admin/positions?election_id=1`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Get Position
+**GET** `/api/v1/admin/positions/{id}`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Create Position
+**POST** `/api/v1/admin/positions`
+```json
+{
+  "election_id": 1,
+  "title": "President",
+  "description": "President of the Republic",
+  "order_position": 1,
+  "max_candidates": 5,
+  "min_votes": 0,
+  "max_votes": 1
+}
+```
+
+### Update Position
+**PUT** `/api/v1/admin/positions/{id}`
+```json
+{
+  "title": "Updated Position Title",
+  "description": "Updated description",
+  "max_candidates": 8
+}
+```
+
+### Delete Position
+**DELETE** `/api/v1/admin/positions/{id}`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Reorder Positions
+**POST** `/api/v1/admin/positions/reorder`
+```json
+{
+  "positions": [
+    {"id": 1, "order_position": 1},
+    {"id": 2, "order_position": 2},
+    {"id": 3, "order_position": 3}
+  ]
+}
+```
+
+---
+
+## Candidate Management
+
+### List Candidates
+**GET** `/api/v1/admin/candidates?position_id=1`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Get Candidate
+**GET** `/api/v1/admin/candidates/{id}`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Create Candidate
+**POST** `/api/v1/admin/candidates`
+```json
+{
+  "position_id": 1,
+  "name": "John Candidate",
+  "nickname": "JC",
+  "description": "Experienced politician",
+  "number": "13",
+  "party": "Democratic Party",
+  "coalition": "Progressive Coalition"
+}
+```
+
+### Update Candidate
+**PUT** `/api/v1/admin/candidates/{id}`
+```json
+{
+  "name": "Updated Candidate Name",
+  "nickname": "Updated Nickname",
+  "description": "Updated description",
+  "number": "15",
+  "party": "Updated Party"
+}
+```
+
+### Delete Candidate
+**DELETE** `/api/v1/admin/candidates/{id}`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Upload Candidate Photo
+**POST** `/api/v1/admin/candidates/{id}/photo`
+```
+Headers: 
+  Authorization: Bearer <admin_token>
+  Content-Type: multipart/form-data
+
+Form Data:
+  photo: [file] (JPG, PNG, GIF - max 5MB)
+```
+
+### Get Candidate Photo
+**GET** `/api/v1/candidates/{id}/photo`
+
+---
+
+## Voting (Voter Endpoints)
+
+### Get Voter Dashboard
+**GET** `/api/v1/voter/dashboard`
+```
+Headers: Authorization: Bearer <voter_token>
+```
+
+### Get Active Elections
+**GET** `/api/v1/voter/elections`
+```
+Headers: Authorization: Bearer <voter_token>
+```
+
+### Get Election for Voting
+**GET** `/api/v1/voter/elections/{id}`
+```
+Headers: Authorization: Bearer <voter_token>
+```
+
+### Check Voting Status
+**GET** `/api/v1/voter/elections/{id}/status`
+```
+Headers: Authorization: Bearer <voter_token>
+```
+
+### Cast Vote (Candidate)
+**POST** `/api/v1/voter/vote`
+```json
+{
+  "election_id": 1,
+  "position_id": 1,
+  "candidate_id": 5,
+  "vote_type": "candidate"
+}
+```
+
+### Cast Vote (Blank)
+**POST** `/api/v1/voter/vote`
+```json
+{
+  "election_id": 1,
+  "position_id": 1,
+  "vote_type": "blank"
+}
+```
+
+### Cast Vote (Null)
+**POST** `/api/v1/voter/vote`
+```json
+{
+  "election_id": 1,
+  "position_id": 1,
+  "vote_type": "null"
+}
+```
+
+### Get Voting History
+**GET** `/api/v1/voter/voting-history`
+```
+Headers: Authorization: Bearer <voter_token>
+```
+
+### Get Voter Profile
+**GET** `/api/v1/voter/profile`
+```
+Headers: Authorization: Bearer <voter_token>
+```
+
+### Update Voter Profile
+**PUT** `/api/v1/voter/profile`
+```json
+{
+  "name": "Updated Name",
+  "email": "updated@email.com",
+  "phone": "(11) 99999-9999"
+}
+```
+
+---
+
+## Reports
+
+### Generate Zerésima Report
+**GET** `/api/v1/admin/reports/zeresima/{electionId}`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Generate Final Results
+**GET** `/api/v1/admin/reports/final-results/{electionId}`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Get Partial Results
+**GET** `/api/v1/admin/reports/partial-results/{electionId}`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Get Voting Statistics
+**GET** `/api/v1/admin/reports/statistics/{electionId}`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Get Audit Report
+**GET** `/api/v1/admin/reports/audit?date_from=2025-01-01&date_to=2025-01-31&user_type=admin`
+```
+Headers: Authorization: Bearer <admin_token>
+```
+
+### Export Results
+**GET** `/api/v1/admin/reports/export/{electionId}?format=csv&type=final`
+```
+Headers: Authorization: Bearer <admin_token>
+
+Query Parameters:
+  format: csv, xml, txt, json
+  type: zeresima, final, partial
+```
+
+---
+
+## Public Endpoints
+
+### Get Public Elections
+**GET** `/api/v1/public/elections`
+
+### Get Public Election Results
+**GET** `/api/v1/public/elections/{id}/results`
+
+### Get Election Statistics
+**GET** `/api/v1/elections/{id}/statistics`
+
+### Get Election Positions
+**GET** `/api/v1/elections/{id}/positions`
+
+### Get Election Candidates
+**GET** `/api/v1/elections/{id}/candidates`
+
+### Get Candidate Info
+**GET** `/api/v1/elections/candidates/{id}`
+
+---
+
+## System Endpoints
+
+### API Status
+**GET** `/`
+
+### Health Check
+**GET** `/health`
+
+### API Info
+**GET** `/api/v1/`
+
+### API Test
+**GET** `/api/v1/test`
+
+### API Status
+**GET** `/api/v1/status`
+
+---
+
+## Headers for Protected Endpoints
+
+```
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+## Token Expiration Times
+
+- **Admin Token**: 59 minutes (3540 seconds)
+- **Voter Token**: 5 minutes (300 seconds)
+
+## Status Codes
+
+- **200**: Success
+- **201**: Created
+- **400**: Bad Request
+- **401**: Unauthorized
+- **403**: Forbidden
+- **404**: Not Found
+- **422**: Validation Error
+- **500**: Internal Server Error
